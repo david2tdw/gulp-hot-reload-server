@@ -3,16 +3,21 @@ var sass = require('gulp-sass')
 var browserSync = require('browser-sync').create()
 var del = require('del')
 
+var useref = require('gulp-useref')
+var gulpIf = require('gulp-if')
+var uglify = require('gulp-uglify')
+// var cssnano= require('gulp-cssnano')
+var minifyCss = require('gulp-clean-css')
 // gulp.task('hello', function (cb) {
 //   console.log('helo world')
 //   cb()
 // })
 const clean = function (cb) {
-  return del(['dist/*'])
+  return del(['dist/*', '!dist/prod'])
   // cb()
 }
 // task aliase for clean
-clean.displayName = 'clean:dist'
+clean.displayName = 'clean:dev'
 // 将clean函数注册为task
 gulp.task(clean)
 
@@ -24,12 +29,12 @@ gulp.task('copy-html', function (cb) {
 })
 
 gulp.task('copy-js', function () {
-  return gulp.src('./src/js/*.js').pipe().pipe(gulp.dest('dist/js')).pipe(browserSync.stream())
+  return gulp.src('./src/js/**/*.js').pipe(gulp.dest('dist/js')).pipe(browserSync.stream())
 })
 
 gulp.task('sass', function () {
   console.log('sass copy')
-  return gulp.src('./src/scss/**/*.scss').pipe(sass()).pipe(gulp.dest('dist/css')).pipe(browserSync.stream())
+  return gulp.src('./src/scss/**/*.scss').pipe(sass().on('error', sass.logError)).pipe(gulp.dest('dist/css')).pipe(browserSync.stream())
 })
 
 // 调用callback去返回task状态！！！
@@ -51,15 +56,47 @@ gulp.task(
     console.log('watch-sass')
     // gulp.watch('src/scss/**/*.scss', gulp.series('sass')).on('change', browserSync.reload)
     gulp.watch('src/scss/**/*.scss', gulp.series('sass')) // 或者上面这种写法，在sass task中调用browserSync.stream()方法
-    gulp.watch('src/*.html', gulp.series('copy-home-html')).on('change', browserSync.reload)
+    gulp.watch('src/*.html', gulp.series('copy-html')).on('change', browserSync.reload)
   })
 )
 
-// gulp.task('reload-server', function () {
-//   gulp.watch(['dist'], function () {
-//     console.log('reload-server')
-//     browserSync.reload()
-//   })
+/** prod release **/
+gulp.task('clean:dist', function () {
+  return del(['dist'])
+})
+
+// Optimizing CSS and JavaScript
+gulp.task('useref', function () {
+  return gulp.src('./src/*.html').pipe(useref()).pipe(gulpIf('*.js', uglify())).pipe(gulpIf('*.css', minifyCss())).pipe(gulp.dest('dist/prod'))
+})
+
+// gulp.task('copy-html-prod', function (cb) {
+//   // return gulp.src('src/index.html').pipe(gulp.dest('dist'))
+//   gulp.src('src/index.html').pipe(gulp.dest('dist'))
+//   gulp.src('src/pages/**/*.html').pipe(gulp.dest('dist/page'))
+//   cb()
 // })
 
-gulp.task('build', gulp.series('clean:dist', 'sass', 'copy-html', 'watch-sass'))
+// gulp.task('copy-js-prod', function () {
+//   return gulp.src('./src/js/*.js').pipe().pipe(gulp.dest('dist/js')).pipe(browserSync.stream())
+// })
+
+// gulp.task('sass-prod', function () {
+//   console.log('sass copy')
+//   return gulp.src('./src/scss/**/*.scss').pipe(sass().on('error', sass.logError)).pipe(gulp.dest('dist/css')).pipe(browserSync.stream())
+// })
+gulp.task('sass-css-prod', function () {
+  return gulp.src('./src/scss/**/*.scss').pipe(sass().on('error', sass.logError)).pipe(gulp.dest('./src/css'))
+})
+gulp.task('clean:css', function () {
+  return del(['./src/css'])
+})
+gulp.task('prod-pre', gulp.series('clean:dist', 'sass-css-prod', 'copy-html'))
+gulp.task('build', gulp.series('prod-pre', 'useref', 'clean:css'))
+/** prod release end **/
+
+
+gulp.task('dev', gulp.series('clean:dev', 'sass', 'copy-html', 'copy-js', 'watch-sass'))
+
+// gulp.task('build', gulp.series('clean:prod', 'sass-prod', 'copy-js-prod', 'sass-prod', 'copy-html-prod', 'useref'))
+

@@ -5,9 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <!-- 注意css路径 -->
+  <!--build:css css/styles.min.css-->
   <link rel="stylesheet" type="text/css" href="./css/styles.css">
+  <!--endbuild-->
 </head>
 <body>
-  this is body content
+  this is body content1
+    <!--build:js js/main.min.js -->
+    <script src="js/lib/a-library.js"></script>
+    <script src="js/lib/another-library.js"></script>
+    <script src="js/main.js"></script>
+    <!-- endbuild -->
 </body>
 </html>

@@ -15,6 +15,9 @@ $ npm install gulp-sass --save-dev
 $ npm install browser-sync --save-dev
 
 $ npm i -D del
+$ npm i -D gulp-if
+$ npm i -D gulp-useref
+
 ```
 
 
