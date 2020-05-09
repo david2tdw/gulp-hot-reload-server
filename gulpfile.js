@@ -16,14 +16,20 @@ clean.displayName = 'clean:dist'
 // 将clean函数注册为task
 gulp.task(clean)
 
-gulp.task('copy-home-html', function () {
-  return gulp.src('src/index.html').pipe(gulp.dest('dist'))
+gulp.task('copy-html', function (cb) {
+  // return gulp.src('src/index.html').pipe(gulp.dest('dist'))
+  gulp.src('src/index.html').pipe(gulp.dest('dist'))
+  gulp.src('src/pages/**/*.html').pipe(gulp.dest('dist/page'))
+  cb()
+})
+
+gulp.task('copy-js', function () {
+  return gulp.src('./src/js/*.js').pipe().pipe(gulp.dest('dist/js')).pipe(browserSync.stream())
 })
 
 gulp.task('sass', function () {
   console.log('sass copy')
   return gulp.src('./src/scss/**/*.scss').pipe(sass()).pipe(gulp.dest('dist/css')).pipe(browserSync.stream())
-  // .pipe(browserSync.reload(  ))
 })
 
 // 调用callback去返回task状态！！！
@@ -56,5 +62,4 @@ gulp.task(
 //   })
 // })
 
-
-gulp.task('build', gulp.series('clean:dist', 'sass', 'copy-home-html', 'watch-sass'))
+gulp.task('build', gulp.series('clean:dist', 'sass', 'copy-html', 'watch-sass'))
