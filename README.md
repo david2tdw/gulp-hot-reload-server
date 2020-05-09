@@ -17,7 +17,8 @@ $ npm install browser-sync --save-dev
 $ npm i -D del
 $ npm i -D gulp-if
 $ npm i -D gulp-useref
-
+$ npm i -D gulp-uglify gulp-clean-css
+$ npm install --save-dev gulp-autoprefixer
 ```
 
 

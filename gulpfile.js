@@ -8,6 +8,8 @@ var gulpIf = require('gulp-if')
 var uglify = require('gulp-uglify')
 // var cssnano= require('gulp-cssnano')
 var minifyCss = require('gulp-clean-css')
+const postcss = require('gulp-postcss')
+var autoprefixer = require('gulp-autoprefixer')
 // gulp.task('hello', function (cb) {
 //   console.log('helo world')
 //   cb()
@@ -34,7 +36,11 @@ gulp.task('copy-js', function () {
 
 gulp.task('sass', function () {
   console.log('sass copy')
-  return gulp.src('./src/scss/**/*.scss').pipe(sass().on('error', sass.logError)).pipe(gulp.dest('dist/css')).pipe(browserSync.stream())
+  return gulp
+    .src('./src/scss/**/*.scss')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(gulp.dest('dist/css'))
+    .pipe(browserSync.stream())
 })
 
 // 调用callback去返回task状态！！！
@@ -67,36 +73,47 @@ gulp.task('clean:dist', function () {
 
 // Optimizing CSS and JavaScript
 gulp.task('useref', function () {
-  return gulp.src('./src/*.html').pipe(useref()).pipe(gulpIf('*.js', uglify())).pipe(gulpIf('*.css', minifyCss())).pipe(gulp.dest('dist/prod'))
+  return gulp
+    .src('./src/*.html')
+    .pipe(useref())
+    .pipe(gulpIf('*.js', uglify()))
+    .pipe(gulpIf('*.css', minifyCss()))
+    .pipe(gulp.dest('dist/prod'))
 })
-
-// gulp.task('copy-html-prod', function (cb) {
-//   // return gulp.src('src/index.html').pipe(gulp.dest('dist'))
-//   gulp.src('src/index.html').pipe(gulp.dest('dist'))
-//   gulp.src('src/pages/**/*.html').pipe(gulp.dest('dist/page'))
-//   cb()
-// })
-
-// gulp.task('copy-js-prod', function () {
-//   return gulp.src('./src/js/*.js').pipe().pipe(gulp.dest('dist/js')).pipe(browserSync.stream())
-// })
-
-// gulp.task('sass-prod', function () {
-//   console.log('sass copy')
-//   return gulp.src('./src/scss/**/*.scss').pipe(sass().on('error', sass.logError)).pipe(gulp.dest('dist/css')).pipe(browserSync.stream())
-// })
+// cascade: false //  是否美化属性值
 gulp.task('sass-css-prod', function () {
-  return gulp.src('./src/scss/**/*.scss').pipe(sass().on('error', sass.logError)).pipe(gulp.dest('./src/css'))
+  return gulp.src('./src/scss/**/*.scss')
+  // .pipe(postcss([autoprefixer({ cascade: false })]))
+  .pipe(autoprefixer({ cascade: false }))
+    
+      .pipe(sass().on('error', sass.logError))
+      .pipe(gulp.dest('./src/css'))
+  
 })
 gulp.task('clean:css', function () {
   return del(['./src/css'])
 })
 gulp.task('prod-pre', gulp.series('clean:dist', 'sass-css-prod', 'copy-html'))
-gulp.task('build', gulp.series('prod-pre', 'useref', 'clean:css'))
+// gulp.task('build', gulp.series('prod-pre', 'useref', 'clean:css'))
+gulp.task('build', gulp.series('prod-pre', 'useref'))
 /** prod release end **/
-
 
 gulp.task('dev', gulp.series('clean:dev', 'sass', 'copy-html', 'copy-js', 'watch-sass'))
 
 // gulp.task('build', gulp.series('clean:prod', 'sass-prod', 'copy-js-prod', 'sass-prod', 'copy-html-prod', 'useref'))
 
+gulp.task('autoprefixer', () => {
+
+  const autoprefixer = require('autoprefixer')
+  const sourcemaps = require('gulp-sourcemaps')
+  const postcss = require('gulp-postcss')
+
+  return (
+    gulp
+      .src('./src/css/styles.css')
+      // .pipe(sourcemaps.init())
+      .pipe(postcss([autoprefixer()]))
+      // .pipe(sourcemaps.write('.'))
+      .pipe(gulp.dest('./src/css1/dest'))
+  )
+})
