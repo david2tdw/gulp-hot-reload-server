@@ -6,7 +6,7 @@ var del = require('del')
 var useref = require('gulp-useref')
 var gulpIf = require('gulp-if')
 var uglify = require('gulp-uglify')
-// var cssnano= require('gulp-cssnano')
+
 var minifyCss = require('gulp-clean-css')
 const postcss = require('gulp-postcss')
 const sourcemaps = require('gulp-sourcemaps')
