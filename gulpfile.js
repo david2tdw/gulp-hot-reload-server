@@ -69,6 +69,7 @@ gulp.task(
     // gulp.watch('src/scss/**/*.scss', gulp.series('sass')).on('change', browserSync.reload)
     gulp.watch('src/scss/**/*.scss', gulp.series('sass')) // 或者上面这种写法，在sass task中调用browserSync.stream()方法
     gulp.watch('src/*.html', gulp.series('copy-html')).on('change', browserSync.reload)
+    gulp.watch('src/**/*.js', gulp.series('copy-js'))
   })
 )
 
