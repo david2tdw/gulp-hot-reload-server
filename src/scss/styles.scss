@@ -1,12 +1,18 @@
 body {
   width: percentage(5/7);
   background: yellow;
-  font-size: 41px;
-  p {
-    font-size: 12px;
-  }
+  font-size: 11px;
+}
 
-  div {
-    font-size: 17px;
-  }
+p {
+  font-size: 12px;
+}
+
+div {
+  font-size: 17px;
+}
+
+::placeholder {
+  color: red;
+  font-size: 1.5em;
 }

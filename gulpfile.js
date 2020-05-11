@@ -9,6 +9,7 @@ var uglify = require('gulp-uglify')
 // var cssnano= require('gulp-cssnano')
 var minifyCss = require('gulp-clean-css')
 const postcss = require('gulp-postcss')
+const sourcemaps = require('gulp-sourcemaps')
 var autoprefixer = require('gulp-autoprefixer')
 // gulp.task('hello', function (cb) {
 //   console.log('helo world')
@@ -84,8 +85,9 @@ gulp.task('useref', function () {
 gulp.task('sass-css-prod', function () {
   return gulp.src('./src/scss/**/*.scss')
   // .pipe(postcss([autoprefixer({ cascade: false })]))
+  // .pipe(sourcemaps.init())
   .pipe(autoprefixer({ cascade: false }))
-    
+  // .pipe(sourcemaps.write('.')) //  生成记录位置信息的sourcemaps文件
       .pipe(sass().on('error', sass.logError))
       .pipe(gulp.dest('./src/css'))
   
@@ -93,7 +95,7 @@ gulp.task('sass-css-prod', function () {
 gulp.task('clean:css', function () {
   return del(['./src/css'])
 })
-gulp.task('prod-pre', gulp.series('clean:dist', 'sass-css-prod', 'copy-html'))
+gulp.task('prod-pre', gulp.series('clean:dist', 'clean:css', 'sass-css-prod', 'copy-html'))
 // gulp.task('build', gulp.series('prod-pre', 'useref', 'clean:css'))
 gulp.task('build', gulp.series('prod-pre', 'useref'))
 /** prod release end **/
@@ -110,10 +112,11 @@ gulp.task('autoprefixer', () => {
 
   return (
     gulp
-      .src('./src/css/styles.css')
-      // .pipe(sourcemaps.init())
+      // .src('./src/css/styles.css')
+      .src('./src/scss/styles.scss')
+      .pipe(sourcemaps.init())
       .pipe(postcss([autoprefixer()]))
-      // .pipe(sourcemaps.write('.'))
+      .pipe(sourcemaps.write('.')) //  生成记录位置信息的sourcemaps文件
       .pipe(gulp.dest('./src/css1/dest'))
   )
 })
