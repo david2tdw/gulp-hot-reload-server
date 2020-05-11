@@ -18,9 +18,19 @@ $ npm i -D del
 $ npm i -D gulp-if
 $ npm i -D gulp-useref
 $ npm i -D gulp-uglify gulp-clean-css
-$ npm install --save-dev gulp-autoprefixer
+$ npm install --save-dev autoprefixer
 ```
 
+## 打包
+
+本地调试
+```
+gulp dev
+```
+产品打包
+```
+gulp build
+```
 
 [browser-sync github](https://github.com/BrowserSync/browser-sync)
 [browser-sync 官网](https://browsersync.io/docs/gulp)
