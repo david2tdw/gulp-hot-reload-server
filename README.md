@@ -3,8 +3,8 @@
 - 编译Sass
 - 每当保存更改，自动刷新浏览器
 - 优化&压缩资源
+- 添加文件hash
 
-[gulp的使用以及Gulp新手入门教程](https://www.cnblogs.com/sxz2008/p/6370221.html)
 
 ## 命令
 ```
@@ -33,5 +33,7 @@ gulp dev
 gulp build
 ```
 
-[browser-sync github](https://github.com/BrowserSync/browser-sync)
-[browser-sync 官网](https://browsersync.io/docs/gulp)
+##参考
+[browser-sync github](https://github.com/BrowserSync/browser-sync)  
+[browser-sync 官网](https://browsersync.io/docs/gulp)  
+[gulp的使用以及Gulp新手入门教程](https://www.cnblogs.com/sxz2008/p/6370221.html)
