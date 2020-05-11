@@ -19,6 +19,7 @@ $ npm i -D gulp-if
 $ npm i -D gulp-useref
 $ npm i -D gulp-uglify gulp-clean-css
 $ npm install --save-dev autoprefixer
+$ npm install -D gulp-rename gulp-inject-string
 ```
 
 ## 打包

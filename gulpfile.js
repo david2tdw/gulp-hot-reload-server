@@ -15,6 +15,12 @@ const sourcemaps = require('gulp-sourcemaps')
 // https://stackoverflow.com/questions/40090111/postcss-error-object-object-is-not-a-postcss-plugin
 const autoprefixer = require('autoprefixer')
 
+// add hash
+var rename = require('gulp-rename')
+var inject = require('gulp-inject-string')
+
+var HASH = new Date().getTime()
+
 // gulp.task('hello', function (cb) {
 //   console.log('helo world')
 //   cb()
@@ -87,6 +93,15 @@ gulp.task('useref', function () {
     .pipe(gulpIf('*.css', minifyCss()))
     .pipe(gulp.dest('dist'))
 })
+
+gulp.task('hash-prod', function () {
+  return gulp
+    .src('dist/index.html')
+    .pipe(inject.replace('styles.min.css', 'styles.min.css' + '?v=' + HASH))
+    .pipe(inject.replace('main.min.js', 'main.min.js' + '?v=' + HASH))
+    .pipe(gulp.dest('dist'))
+})
+
 // 添加产品编译souce-maps
 gulp.task('sass-css-prod', function () {
   return gulp
@@ -104,7 +119,7 @@ gulp.task('clean:css', function () {
   return del(['./src/css'])
 })
 gulp.task('prod-pre', gulp.series('clean:dist', 'clean:css', 'sass-css-prod', 'copy-html', 'copy-css-sourcemap'))
-gulp.task('build', gulp.series('prod-pre', 'useref', 'clean:css'))
+gulp.task('build', gulp.series('prod-pre', 'useref', 'hash-prod', 'clean:css'))
 
 /** prod release end **/
 
